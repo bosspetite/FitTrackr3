@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-const API_URL = "https://fit-trackr-backend.onrender.com"; // Use .env for flexibility in different environments
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
+
 
 const GYM_IMAGE =
   "https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=800&q=80";
