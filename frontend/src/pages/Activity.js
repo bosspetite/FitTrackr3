@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import NavBar from "../components/NavBar";
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+const API_URL = "https://fit-trackr-backend.onrender.com";
 
 export default function Activity() {
   const [activities, setActivities] = useState([]);
@@ -18,15 +18,20 @@ export default function Activity() {
           headers: { Authorization: `Bearer ${token}` }
         });
         const data = await res.json();
-        if (res.ok) setActivities(data.activities || []);
-      } catch {
-        // Could show an error here if you want
+        if (res.ok) {
+          setActivities(data.activities || []);
+        } else {
+          console.error("Failed to fetch activities:", data.message);
+        }
+      } catch (err) {
+        console.error("Error fetching activities:", err);
       }
     }
     fetchActivities();
   }, []);
 
-  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
+  const handleChange = (e) =>
+    setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -46,7 +51,7 @@ export default function Activity() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(form)
+        body: JSON.stringify(form),
       });
       const data = await res.json();
 
@@ -59,6 +64,7 @@ export default function Activity() {
         setMsg(data.message || "Failed to log activity.");
       }
     } catch (error) {
+      console.error("Error submitting activity:", error);
       setMsg("An error occurred. Please try again.");
     }
   };
@@ -69,14 +75,27 @@ export default function Activity() {
       <div className="container py-5">
         <h2 className="mb-4 fw-bold text-primary text-center">Log New Activity</h2>
         {msg && (
-          <div className={`alert ${success ? "alert-success" : "alert-danger"}`} role="alert">
+          <div
+            className={`alert ${success ? "alert-success" : "alert-danger"}`}
+            role="alert"
+          >
             {msg}
           </div>
         )}
-        <form className="row g-3 mb-5 justify-content-center" style={{maxWidth: 500, margin: "0 auto"}} onSubmit={handleSubmit}>
+        <form
+          className="row g-3 mb-5 justify-content-center"
+          style={{ maxWidth: 500, margin: "0 auto" }}
+          onSubmit={handleSubmit}
+        >
           <div className="col-12">
             <label className="form-label">Activity Type</label>
-            <select name="type" className="form-select" value={form.type} onChange={handleChange} required>
+            <select
+              name="type"
+              className="form-select"
+              value={form.type}
+              onChange={handleChange}
+              required
+            >
               <option value="">Select activity</option>
               <option value="Running">Running</option>
               <option value="Cycling">Cycling</option>
@@ -88,27 +107,59 @@ export default function Activity() {
           </div>
           <div className="col-12">
             <label className="form-label">Duration (minutes)</label>
-            <input type="number" name="duration" min={1} className="form-control" value={form.duration} onChange={handleChange} required />
+            <input
+              type="number"
+              name="duration"
+              min={1}
+              className="form-control"
+              value={form.duration}
+              onChange={handleChange}
+              required
+            />
           </div>
           <div className="col-12">
-            <label className="form-label">Note <span className="text-muted">(optional)</span></label>
-            <textarea name="note" rows={2} className="form-control" value={form.note} onChange={handleChange} placeholder="How did you feel? Any details..." />
+            <label className="form-label">
+              Note <span className="text-muted">(optional)</span>
+            </label>
+            <textarea
+              name="note"
+              rows={2}
+              className="form-control"
+              value={form.note}
+              onChange={handleChange}
+              placeholder="How did you feel? Any details..."
+            />
           </div>
           <div className="col-12 d-grid">
-            <button type="submit" className="btn btn-primary">Log Activity</button>
+            <button type="submit" className="btn btn-primary">
+              Log Activity
+            </button>
           </div>
         </form>
-        <div className="card shadow mx-auto" style={{maxWidth: 600}}>
+
+        <div className="card shadow mx-auto" style={{ maxWidth: 600 }}>
           <div className="card-body">
             <h5 className="card-title">Recent Activities</h5>
             <ul className="list-group">
               {activities.length === 0 ? (
-                <li className="list-group-item text-muted">No activities yet!</li>
+                <li className="list-group-item text-muted">
+                  No activities yet!
+                </li>
               ) : (
                 activities.map((a, i) => (
-                  <li key={i} className="list-group-item d-flex justify-content-between align-items-center">
-                    <span>{a.type} <span className="text-muted small">({a.duration} min)</span></span>
-                    <span className="text-secondary small">{a.note}</span>
+                  <li
+                    key={i}
+                    className="list-group-item d-flex justify-content-between align-items-center"
+                  >
+                    <span>
+                      {a.type}{" "}
+                      <span className="text-muted small">
+                        ({a.duration} min)
+                      </span>
+                    </span>
+                    {a.note && (
+                      <span className="text-secondary small">{a.note}</span>
+                    )}
                   </li>
                 ))
               )}
