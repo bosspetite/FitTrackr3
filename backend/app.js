@@ -10,9 +10,9 @@ const goalRoutes = require('./routes/goal');
 
 const app = express();
 
-app.use(cors());
+import cors from 'cors';
 app.use(cors({
-  origin: 'https://fit-trackr3.vercel.app', // your Vercel frontend URL
+  origin: process.env.https://fit-trackr3.vercel.app,
   credentials: true // if you're using cookies/auth
 }));
 app.use(express.json());
