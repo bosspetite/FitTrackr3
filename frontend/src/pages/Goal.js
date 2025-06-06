@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import NavBar from "../components/NavBar";
 
-const API_URL = "https://fit-trackr-backend.onrender.com"; // You can switch to process.env.REACT_APP_API_URL in prod
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
+
 
 export default function Goal() {
   const [goals, setGoals] = useState([]);
