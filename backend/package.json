@@ -5,8 +5,8 @@
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js",
-    "test": "mocha tests/**/*.test.js"
-     "build": "echo \"No build step needed\""
+    "test": "mocha tests/**/*.test.js",
+    "build": "echo \"No build step needed\""
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
